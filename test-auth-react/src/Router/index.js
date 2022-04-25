@@ -1,10 +1,15 @@
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Login from "../pages/Login";
 import Products from "../pages/Products";
 import { useKeycloak } from "../useKeycloak";
 import PrivateRoute from "./PrivateRoute";
 
-export default function Router() {
+export default function Routes() {
   const { initialized } = useKeycloak();
 
   if (!initialized) {
@@ -12,11 +17,10 @@ export default function Router() {
   }
 
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route component={Login} exact path="/login" />
-        <PrivateRoute exact path="/products" component={Products} />
-      </Switch>
-    </BrowserRouter>
+    <Router>
+      <Redirect from="/" to="/home" />
+      <Route component={Login} exact path="/login" />
+      <PrivateRoute exact path="/products" component={Products} />
+    </Router>
   );
 }

@@ -8,7 +8,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
   const render = useCallback(
     (props) => {
       console.log(keycloak.authenticated);
-      if (keycloak.authenticated) {
+      if (!!keycloak.authenticated) {
         return <Component {...props} />;
       }
 

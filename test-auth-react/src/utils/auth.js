@@ -10,5 +10,6 @@ export const keycloak = Keycloak({
 
 export const keycloakConfig = {
   onLoad: "check-sso", //login-required vs check-sso
-  checkLoginIframe: false,
+  //checkLoginIframe: false,
+  promiseType: "native",
 };

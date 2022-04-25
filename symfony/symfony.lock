@@ -51,6 +51,18 @@
     "league/oauth2-client": {
         "version": "2.6.1"
     },
+    "nelmio/cors-bundle": {
+        "version": "2.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.5",
+            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
+        },
+        "files": [
+            "config/packages/nelmio_cors.yaml"
+        ]
+    },
     "paragonie/random_compat": {
         "version": "v9.99.100"
     },
@@ -153,6 +165,12 @@
             "src/Controller/.gitignore",
             "src/Kernel.php"
         ]
+    },
+    "symfony/http-client": {
+        "version": "v5.4.7"
+    },
+    "symfony/http-client-contracts": {
+        "version": "v2.5.1"
     },
     "symfony/http-foundation": {
         "version": "v5.4.6"
