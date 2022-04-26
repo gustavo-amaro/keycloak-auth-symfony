@@ -33,9 +33,11 @@ class ApiController extends AbstractController
     /**
      * @Route("/products", name="product_list", methods={"GET"})
      */
-    public function listProducts()
+    public function listProducts(Request $request)
     {
-        return new Response(json_encode($this->products));
+        dd($this->getUser());
+
+        return new Response(json_encode(['user' => $this->getUser(), 'products' => $this->products]));
     }
 
     /**

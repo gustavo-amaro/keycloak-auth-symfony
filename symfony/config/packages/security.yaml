@@ -1,33 +1,27 @@
-# config/packages/security.yaml
-imports:
-  - { resource: "@IDCIKeycloakSecurityBundle/Resources/config/security.yaml" } # import our security provider
-
 security:
+  enable_authenticator_manager: true
+
+  providers:
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: id
   firewalls:
-    # Authorize everyone to try connecting (this route is imported from our bundle routing configuration)
-    auth_connect:
-      pattern: ^/auth/connect/.*
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
 
-    # This bundle is using security guard provided by symfony
-    # Login form authentication
-    secured_area:
-      pattern: ^/admin
-      guard:
-        provider: idci_keycloak_security_provider
-        authenticators:
-          - IDCI\Bundle\KeycloakSecurityBundle\Security\Authenticator\KeycloakAuthenticator
-
-    # Bearer token authentication
+    main:
+      lazy: true
+      custom_authenticators:
+        - App\Security\KeycloakAuthenticator
     api:
       pattern: ^/api
-      guard:
-        provider: idci_keycloak_bearer_security_provider
-        authenticators:
-          - IDCI\Bundle\KeycloakSecurityBundle\Security\Authenticator\KeycloakBearerAuthenticator
-
-  role_hierarchy:
-    ROLE_ADMIN: ROLE_USER
+      lazy: true
+      provider: app_user_provider
+      custom_authenticators:
+        - App\Security\KeycloakAuthenticator
 
   access_control:
-    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/api, roles: ROLE_OFFLINE_ACCESS }

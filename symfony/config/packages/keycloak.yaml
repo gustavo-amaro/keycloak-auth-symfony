@@ -1,0 +1,4 @@
+parameters:
+  keycloak_realm: "%env(resolve:KEYCLOAK_REALM)%"
+  keycloak_url: "%env(resolve:KEYCLOAK_URL)%"
+  jwt_public_key: "%env(resolve:JWT_PUBLIC_KEY)%"
