@@ -24,4 +24,4 @@ security:
 
   access_control:
     - { path: ^/docs, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/api, roles: ROLE_OFFLINE_ACCESS }
+    - { path: ^/api, roles: ROLE_ADMIN }

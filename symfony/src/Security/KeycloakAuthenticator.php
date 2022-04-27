@@ -83,7 +83,6 @@ class KeycloakAuthenticator extends AbstractAuthenticator
                 //$user = $this->userRepository->find($userId);
                 global $jwtToken;
                 $user = new User($userId);
-                $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
 
                 $httpClient = HttpClient::create();
 
@@ -103,7 +102,14 @@ class KeycloakAuthenticator extends AbstractAuthenticator
                 $roles = [];
 
                 foreach ($responseArray['roles'] as $role) {
-                    $roles[] = 'ROLE_' . strtoupper($role);
+                    $role = strtoupper($role);
+
+                    if (!str_starts_with($role, 'ROLE_')) {
+                        $role = 'ROLE_' . $role;
+                    }
+
+
+                    $roles[] = $role;
                 }
 
                 $user->setRoles($roles);
