@@ -1,32 +1,62 @@
-version: '3'
+version: '3.9'
 volumes:
   db_data:
-      driver: local
+    driver: local
 services:
-  app:
-      image: quay.io/keycloak/keycloak:11.0.2
-      container_name: micro-auth-app
-      environment:
-        - KEYCLOAK_USER=admin
-        - KEYCLOAK_PASSWORD=admin
-        - DB_ADDR=db
-        - DB_VENDOR=mysql
-        - DB_DATABASE=micro_auth
-        - DB_PORT=3306
-        - DB_USER=root
-        - DB_PASSWORD=root
-      ports:
+  keycloak:
+    depends_on:
+      - db
+    container_name: keycloak
+    environment:
+      DB_VENDOR: mysql
+      DB_ADDR: db
+      DB_DATABASE: ${MYSQL_DB}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASS}
+      KEYCLOAK_USER: ${KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASS}
+      #VIRTUAL_HOST: ${VIRTUAL_HOST}
+      #LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      #LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      #VIRTUAL_PORT: "8080"
+      #HTTPS_METHOD: redirect
+      #PROXY_ADDRESS_FORWARDING: "true" # <==== very important if you use reverse proxy
+    image: jboss/keycloak:${KEYCLOAK_VERSION}
+    ports:
         - 8080:8080
-      depends_on:
-        - db
-      
+    restart: unless-stopped
+    networks:
+      - keycloak-net
+
   db:
-    build: ./.docker/mysql
-    container_name: micro-auth-db
+    image: mysql
+    container_name: auth-db
     restart: always
     tty: true
     volumes:
       - ./.docker/db_data:/var/lib/mysql
     environment:
-      - MYSQL_DATABASE=micro_auth
-      - MYSQL_ROOT_PASSWORD=root
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASS}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASS}
+    networks:
+      - keycloak-net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: on-failure
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASS}
+      UPLOAD_LIMIT: 300000000
+    ports:
+      - 4444:80
+    depends_on:
+      - db
+    networks:
+      - keycloak-net
+
+networks:
+  keycloak-net:
+    driver: bridge
