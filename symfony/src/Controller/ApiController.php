@@ -35,8 +35,6 @@ class ApiController extends AbstractController
      */
     public function listProducts(Request $request)
     {
-        dd($this->getUser());
-
         return new Response(json_encode(['user' => $this->getUser(), 'products' => $this->products]));
     }
 

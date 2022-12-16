@@ -1,3 +1,4 @@
+import { useKeycloak } from "@react-keycloak/web";
 import {
   BrowserRouter as Router,
   Switch,
@@ -6,7 +7,6 @@ import {
 } from "react-router-dom";
 import Login from "../pages/Login";
 import Products from "../pages/Products";
-import { useKeycloak } from "../useKeycloak";
 import PrivateRoute from "./PrivateRoute";
 
 export default function Routes() {
@@ -18,7 +18,7 @@ export default function Routes() {
 
   return (
     <Router>
-      <Redirect from="/" to="/home" />
+      <Redirect from="/" to="/products" />
       <Route component={Login} exact path="/login" />
       <PrivateRoute exact path="/products" component={Products} />
     </Router>

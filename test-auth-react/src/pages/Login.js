@@ -1,22 +1,25 @@
 import React from "react";
+import { useKeycloak } from "@react-keycloak/web";
 import { Redirect, useLocation } from "react-router-dom";
-import { useKeycloak } from "../useKeycloak";
 
 // import { Container } from './styles';
 
 function Login() {
-  const { keycloak } = useKeycloak();
-
+  const { keycloak, initialized } = useKeycloak();
   const location = useLocation();
+
+  if (!initialized) {
+    return <h1>Carregando...</h1>;
+  }
 
   if (!!keycloak.authenticated) {
     const { from } = location.state || { from: { pathname: "/" } };
-    //return <Redirect to={from} />;
+    return <Redirect to={from} />;
   }
 
-  //keycloak.login({ redirectUri: `http://localhost:3000/products` });
+  keycloak.login({ redirectUri: `http://localhost:3000/products` });
 
-  return <button onClick={() => keycloak.login()}>Login</button>;
+  return <h1>Carregando...</h1>;
 }
 
 export default Login;

@@ -2,7 +2,7 @@ import Keycloak from "keycloak-js";
 
 const keycloakCredentials = JSON.parse(process.env.REACT_APP_KEYCLOAK_JSON);
 
-export const keycloak = Keycloak({
+export const keycloak = new Keycloak({
   url: keycloakCredentials["auth-server-url"],
   realm: keycloakCredentials["realm"],
   clientId: keycloakCredentials["resource"],
@@ -11,5 +11,5 @@ export const keycloak = Keycloak({
 export const keycloakConfig = {
   onLoad: "check-sso", //login-required vs check-sso
   //checkLoginIframe: false,
-  promiseType: "native",
+  //promiseType: "native",
 };
